@@ -1,14 +1,14 @@
+# region Common Settings & Anchors
 x-common-settings: &common-settings
   restart: "no"
   environment:
     - ENV=${ENV:-development}
   networks:
     - dev-stack-network
+# endregion
 
 services:
-  # -----------------------------
-  # OLLAMA
-  # -----------------------------
+  # region Ollama
   ollama:
     <<: *common-settings
     image: ollama/ollama:latest
@@ -19,10 +19,9 @@ services:
       - OLLAMA_NUM_PARALLEL=${OLLAMA_NUM_PARALLEL:-1}
     volumes:
       - ollama_data:/root/.ollama
+  # endregion
 
-  # -----------------------------
-  # PIPER TTS
-  # -----------------------------
+  # region Piper TTS
   ai-piper-tts:
     <<: *common-settings
     build:
@@ -37,10 +36,27 @@ services:
       resources:
         limits:
           memory: ${PIPER_MEMORY_LIMIT:-512M}
+  # endregion
 
-  # -----------------------------
-  # WHISPER STT
-  # -----------------------------
+  # region Coqui XTTS v2
+  ai-xtts-tts:
+    <<: *common-settings
+    image: ghcr.io/coqui-ai/tts-cpu:latest
+    container_name: ai-xtts-tts
+    ports:
+      - "${XTTS_PORT:-8020}:8020"
+    environment:
+      - TTS_READ_TEXT_DIRECTLY=true
+    volumes:
+      - xtts_models:/root/.local/share/tts
+    command: tts-server --model_name tts_models/multilingual/multi-dataset/xtts_v2 --port 8020
+    deploy:
+      resources:
+        limits:
+          memory: ${XTTS_MEMORY_LIMIT:-4G}
+  # endregion
+
+  # region Whisper STT
   ai-whisper-stt:
     <<: *common-settings
     build:
@@ -60,13 +76,19 @@ services:
       resources:
         limits:
           memory: ${WHISPER_MEMORY_LIMIT:-1G}
+  # endregion
 
+# region Volumes
 volumes:
   ollama_data:
   piper_models:
+  xtts_models:
   whisper_models:
+# endregion
 
+# region Networks
 networks:
   dev-stack-network:
     name: ${DOCKER_NETWORK_NAME:-dev-stack-network}
     external: true
+# endregion

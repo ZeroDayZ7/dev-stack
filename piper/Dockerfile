@@ -17,22 +17,15 @@ COPY src/ /app/src/
 
 EXPOSE 8000
 
-# Skrypt weryfikujący i pobierający modele (polski i japoński) na wolumen przy starcie
+# Skrypt weryfikujący i pobierający modele (tylko polski głos Gosia) przy starcie
 CMD ["sh", "-c", "\
     mkdir -p /models && \
     \
     # Pobieranie głosu polskiego (Gosia)
-    if [ ! -f /models/pl_gosia.onnx ]; then \
+    if [ ! -f /models/pl_gosia.onnx ] || [ ! -f /models/pl_gosia.onnx.json ]; then \
         echo 'Downloading Polish TTS Model (Gosia)...' && \
         wget -O /models/pl_gosia.onnx 'https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/pl/pl_PL/gosia/medium/pl_PL-gosia-medium.onnx?download=true' && \
         wget -O /models/pl_gosia.onnx.json 'https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/pl/pl_PL/gosia/medium/pl_PL-gosia-medium.onnx.json?download=true'; \
-    fi && \
-    \
-    # Pobieranie głosu japońskiego (Kanachan) - POPRAWIONY URL (ja zamiast jp)
-    if [ ! -f /models/ja_kanachan.onnx ]; then \
-        echo 'Downloading Japanese TTS Model (Kanachan)...' && \
-        wget -O /models/ja_kanachan.onnx 'https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/ja/ja_JP/kanachan/medium/ja_JP-kanachan-medium.onnx?download=true' && \
-        wget -O /models/ja_kanachan.onnx.json 'https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0/ja/ja_JP/kanachan/medium/ja_JP-kanachan-medium.onnx.json?download=true'; \
     fi && \
     \
     echo 'All TTS models are ready.' && \

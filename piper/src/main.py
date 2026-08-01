@@ -30,7 +30,6 @@ app = FastAPI(
 # Rejestr dostępnych modeli. Aby dodać nowy język, po prostu dodaj go do tego słownika:
 SUPPORTED_MODELS: Dict[str, str] = {
     "pl": "/models/pl_gosia.onnx",
-    "ja": "/models/ja_kanachan.onnx",
     # "en": "/models/en_lessac.onnx",  <-- przykład jak dodać kolejny język
 }
 
