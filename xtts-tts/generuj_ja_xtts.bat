@@ -7,7 +7,7 @@ set TARGET_DIR=%~dp0test\ja
 :: Create target directory if it does not exist
 if not exist "%TARGET_DIR%" mkdir "%TARGET_DIR%"
 
-echo [INFO] Generating Japanese audio via XTTS v2...
+echo [INFO] Generating audio via XTTS v2...
 
 :: Generate Japanese Audio Test File
 curl -X POST "http://localhost:8020/api/tts" ^
@@ -16,5 +16,5 @@ curl -X POST "http://localhost:8020/api/tts" ^
   --output "%TARGET_DIR%\test_xtts.wav"
 
 echo.
-echo [SUCCESS] Japanese audio file saved to: %TARGET_DIR%\test_xtts.wav
+echo [SUCCESS] Audio file saved to: %TARGET_DIR%\test_xtts.wav
 pause
