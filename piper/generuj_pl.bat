@@ -1,0 +1,31 @@
+@echo off
+chcp 65001 > nul
+
+set TARGET_DIR=C:\Users\Neo\Desktop\WWW\csof\csof_backend_v2\platform\services\ai-piper-tts\test\pl
+
+:: Tworzenie podfolderu, jeśli nie istnieje
+if not exist "%TARGET_DIR%" mkdir "%TARGET_DIR%"
+
+echo Generowanie polskich plików audio...
+
+:: 1. ERP Test
+curl -X POST "http://localhost:8000/api/tts" ^
+  -H "Content-Type: application/json; charset=utf-8" ^
+  -d "{\"text\": \"System ERP działa poprawnie. Wszystkie moduły są aktywne.\", \"speed\": 0.85, \"sentence_silence\": 0.75}" ^
+  --output "%TARGET_DIR%\erp_test.wav"
+
+:: 2. Raport operacyjny noc
+curl -X POST "http://localhost:8000/api/tts" ^
+  -H "Content-Type: application/json; charset=utf-8" ^
+  -d "{\"text\": \"Dzień dobry. Rozpoczynam podsumowanie operacyjne zakończonego cyklu nocnego. Wszystkie systemy centralne zostały pomyślnie zweryfikowane. Nie wykryto awarii krytycznych ani utraty integralności danych. Przechodzę do szczegółowego raportu. Punkt pierwszy. Infrastruktura serwerowa. Zakończono automatyczną konserwację klastrów obliczeniowych. Przeprowadzono aktualizację środowisk produkcyjnych bez wpływu na dostępność usług. Wykonano pełną synchronizację kopii zapasowych pomiędzy głównym centrum danych oraz zapasowym centrum przetwarzania. Test odtworzenia danych zakończył się powodzeniem. Punkt drugi. Logistyka i magazyny. Zrealizowano nocną optymalizację rozmieszczenia towarów wysokiej rotacji. Automatyczne systemy kompletacji skróciły średni czas przygotowania zamówień. Wszystkie dostawy od partnerów handlowych zostały zweryfikowane pod względem zgodności dokumentów oraz stanów magazynowych. Nie wykryto niezgodności wymagających interwencji operatora. Punkt trzeci. Sprzedaż oraz obsługa klientów. Platforma sprzedażowa utrzymała pełną dostępność usług przez cały okres raportowy. Automatyczne mechanizmy analizy wykryły zwiększone zainteresowanie produktami firmy TechSolutions Polska, Baltic Logistics oraz Nova Industries. System wygenerował prognozę zwiększonego zapotrzebowania na kolejne dwadzieścia cztery godziny i przekazał rekomendacje do działu planowania. Punkt czwarty. Relacje z klientami. Moduł zarządzania zgłoszeniami przeanalizował wszystkie nowe wiadomości. Sztuczna inteligencja przypisała priorytety oraz automatycznie przygotowała odpowiedzi dla zgłoszeń rutynowych. Zidentyfikowano jedno zgłoszenie wymagające natychmiastowej analizy dotyczące współpracy z przedsiębiorstwem Orion Manufacturing. Odpowiedni zespół został automatycznie powiadomiony. Punkt piąty. Finanse i księgowość. Zakończono nocową weryfikację dokumentów sprzedażowych, kosztowych oraz magazynowych. Wszystkie operacje zostały poprawnie zaksięgowane. System wykrył kilka faktur oczekujących na zatwierdzenie zgodnie z procedurą wielopoziomowej autoryzacji. Nie odnotowano niezgodności podatkowych ani błędów rozliczeniowych. Punkt szósty. Produkcja. Linie technologiczne osiągnęły planowaną wydajność. System monitorowania jakości potwierdził zgodność parametrów produkcyjnych z wymaganiami technologicznymi. Nie wykryto przekroczenia dopuszczalnych tolerancji jakościowych. Punkt siódmy. Bezpieczeństwo cyfrowe. W godzinach nocnych zarejestrowano zwiększoną liczbę prób logowania z adresów zagranicznych. Mechanizmy ochronne automatycznie zablokowały wszystkie podejrzane sesje. Nie stwierdzono naruszenia bezpieczeństwa ani wycieku informacji. Wszystkie zdarzenia zostały zapisane do dzienników audytowych. Punkt ósmy. Zarządzanie personelem. System zakończył synchronizację harmonogramów pracy. Zweryfikowano kompletność ewidencji czasu pracy oraz dostępności zespołów na bieżącą zmianę. Automatycznie wygenerowano raport obecności dla kierowników działów. Punkt dziewiąty. Analiza biznesowa. Moduły predykcyjne opracowały nowe prognozy sprzedaży, kosztów operacyjnych oraz zapotrzebowania magazynowego. Dokładność modeli pozostaje na wysokim poziomie. Rekomendowane działania zostały przekazane do panelu zarządczego. Punkt dziesiąty. Stan systemu. Wszystkie usługi działają stabilnie. Obciążenie infrastruktury pozostaje poniżej wartości progowych. Dostępność platformy wynosi sto procent. Wszystkie procesy nocne zakończyły się pomyślnie. Raport operacyjny został zakończony. Życzę spokojnego i wydajnego dnia pracy.\", \"speed\": 0.80, \"sentence_silence\": 0.75}" ^
+  --output "%TARGET_DIR%\raport_operacyjny_noc.wav"
+
+:: 3. Raport prezesa
+curl -X POST "http://localhost:8000/api/tts" ^
+  -H "Content-Type: application/json; charset=utf-8" ^
+  -d "{\"text\": \"Szanowny Panie Prezesie. Przygotowano kluczowe wskaźniki efektywności oraz podsumowanie operacyjne. Wszystkie cele na ten kwartał są realizowane zgodnie z harmonogramem.\", \"speed\": 0.85, \"sentence_silence\": 0.75}" ^
+  --output "%TARGET_DIR%\raport_prezesa.wav"
+
+echo.
+echo [Sukces] Polskie pliki audio zostały zapisane w %TARGET_DIR%
+pause

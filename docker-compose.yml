@@ -1,5 +1,5 @@
 x-common-settings: &common-settings
-  restart: unless-stopped
+  restart: "no"
   environment:
     - ENV=${ENV:-development}
   networks:
