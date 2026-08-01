@@ -1,0 +1,72 @@
+x-common-settings: &common-settings
+  restart: unless-stopped
+  environment:
+    - ENV=development
+  networks:
+    - dev-stack-network
+
+services:
+  # -----------------------------
+  # OLLAMA
+  # -----------------------------
+  ollama:
+    <<: *common-settings
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    environment:
+      - OLLAMA_NUM_PARALLEL=1
+    volumes:
+      - ollama_data:/root/.ollama
+
+  # -----------------------------
+  # PIPER TTS
+  # -----------------------------
+  ai-piper-tts:
+    <<: *common-settings
+    build:
+      context: ./piper
+      dockerfile: Dockerfile
+    container_name: ai-piper-tts
+    ports:
+      - "8000:8000"
+    volumes:
+      - piper_models:/models
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
+  # -----------------------------
+  # WHISPER STT
+  # -----------------------------
+  ai-whisper-stt:
+    <<: *common-settings
+    build:
+      context: ./whisper
+      dockerfile: Dockerfile
+    container_name: ai-whisper-stt
+    ports:
+      - "8001:8000"
+    environment:
+      - OMP_NUM_THREADS=2
+      - CTRANS_NUM_THREADS=2
+    volumes:
+      - whisper_models:/root/.cache/huggingface
+    depends_on:
+      - ollama
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+volumes:
+  ollama_data:
+  piper_models:
+  whisper_models:
+
+networks:
+  dev-stack-network:
+    name: dev-stack-network
+    external: true

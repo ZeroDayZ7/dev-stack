@@ -1,0 +1,1 @@
+curl -X POST "http://localhost:8001/api/transcribe" -F "file=@C:\Users\Neo\Desktop\WWW\csof\csof_backend_v2\platform\services\ai-piper-tts\test\raport_prezesa.wav"
