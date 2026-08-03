@@ -13,6 +13,9 @@ bin/*
 **/logs/
 **/combined.txt
 # **/temp.md
-# **/temp
+# **/speech.wav
+**/sample.wav
 **/pgadmin_data/
+
+
 

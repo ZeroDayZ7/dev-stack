@@ -46,7 +46,7 @@ async def health_check():
 @app.post("/api/transcribe", response_class=JSONResponse)
 async def transcribe_audio(
     file: UploadFile = File(..., description="Plik audio w formacie wav, mp3, m4a, ogg lub flac"),
-    language: str = Query(default="pl", description="Wymuszenie języka rozpoznawania (np. 'pl', 'en')"),
+    language: str | None = Query(default=None, description="Wymuszenie języka rozpoznawania (np. 'pl', 'ja'). Pozostaw brak/None dla autodetekcji."),
     beam_size: int = Query(default=5, ge=1, le=10, description="Rozmiar drzewa przeszukiwań (beam search). Większy = dokładniejszy, ale wolniejszy."),
     temperature: float = Query(default=0.0, ge=0.0, le=1.0, description="Temperatura próbkowania. 0.0 oznacza maksymalną powtarzalność i stabilność."),
     vad_filter: bool = Query(default=True, description="Włączenie filtra VAD (Voice Activity Detection) usuwającego ciszę i szum przed transkrypcją."),
@@ -77,12 +77,14 @@ async def transcribe_audio(
             )
 
     try:
-        logger.info(f"Przetwarzanie STT: {file.filename} (VAD: {vad_filter}, Beam: {beam_size}, Temp: {temperature})")
+        target_language = None if (not language or language.lower() == "auto") else language
+
+        logger.info(f"Przetwarzanie STT: {file.filename} (Language: {target_language or 'AUTO'}, VAD: {vad_filter}, Beam: {beam_size}, Temp: {temperature})")
         
         # Wywołanie silnika z kompletem zaawansowanych parametrów
         segments, info = model.transcribe(
             temp_path,
-            language=language,
+            language=target_language,
             beam_size=beam_size,
             temperature=temperature,
             vad_filter=vad_filter,

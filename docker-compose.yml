@@ -38,24 +38,6 @@ services:
           memory: ${PIPER_MEMORY_LIMIT:-512M}
   # endregion
 
-  # region Coqui XTTS v2
-  ai-xtts-tts:
-    <<: *common-settings
-    image: ghcr.io/coqui-ai/tts-cpu:latest
-    container_name: ai-xtts-tts
-    ports:
-      - "${XTTS_PORT:-8020}:8020"
-    environment:
-      - TTS_READ_TEXT_DIRECTLY=true
-    volumes:
-      - xtts_models:/root/.local/share/tts
-    command: tts-server --model_name tts_models/multilingual/multi-dataset/xtts_v2 --port 8020
-    deploy:
-      resources:
-        limits:
-          memory: ${XTTS_MEMORY_LIMIT:-4G}
-  # endregion
-
   # region Whisper STT
   ai-whisper-stt:
     <<: *common-settings
@@ -76,6 +58,24 @@ services:
       resources:
         limits:
           memory: ${WHISPER_MEMORY_LIMIT:-1G}
+  # endregion
+
+  # region Coqui XTTS v2 (CLI Worker)
+  ai-coqui-tts:
+    <<: *common-settings
+    image: ghcr.io/coqui-ai/tts-cpu:latest
+    container_name: ai-coqui-tts
+    entrypoint: ["tail", "-f", "/dev/null"]
+    environment:
+      - PYTHONUNBUFFERED=1
+      - COQUI_TOS_AGREED=1
+    volumes:
+      - xtts_models:/root/.local/share/tts
+      - ./xtts-tts/test:/app/output
+    deploy:
+      resources:
+        limits:
+          memory: ${XTTS_MEMORY_LIMIT:-6G}
   # endregion
 
 # region Volumes
