@@ -1,4 +1,3 @@
-```python
 import json
 import sys
 from pathlib import Path
@@ -62,7 +61,7 @@ def convert_json_to_srt(json_path: Path, srt_path: Path) -> None:
 def main() -> int:
     if len(sys.argv) != 3:
         print(
-            "Uzycie: python json_to_srt.py <input.json> <output.srt>",
+            "Uzycie: python process_video.py <input.json> <output.srt>",
             file=sys.stderr,
         )
         return 1
@@ -89,4 +88,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-```

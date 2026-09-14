@@ -88,7 +88,7 @@ echo.
 
 echo [INFO] Generowanie SRT...
 
-python "%~dp0test\process_video.py" "!JSON_FILE!" "!SRT_FILE!"
+python "%~dp0process_video.py" "!JSON_FILE!" "!SRT_FILE!"
 
 if errorlevel 1 (
     echo.
