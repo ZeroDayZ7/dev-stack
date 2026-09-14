@@ -19,11 +19,30 @@ app = FastAPI(
     version="2.0.0"
 )
 
-# Initializing the model on CPU with int8 optimization (minimal RAM and CPU usage)
-MODEL_SIZE = "tiny"
-logger.info(f"Loading Faster-Whisper model ({MODEL_SIZE}) on CPU...")
-model = WhisperModel(MODEL_SIZE, device="cpu", compute_type="int8")
-logger.info("Model loaded successfully and ready for use.")
+# Initializing the model on CPU optimized for older CPUs (AMD FX-8350 / AVX1)
+MODEL_SIZE = os.getenv("WHISPER_MODEL", "medium")
+COMPUTE_TYPE = os.getenv("WHISPER_COMPUTE_TYPE", "float32")
+CPU_THREADS = int(os.getenv("CTRANS_NUM_THREADS", "4"))
+
+logger.info(f"Loading Faster-Whisper model ({MODEL_SIZE}) on CPU (threads={CPU_THREADS}, compute_type={COMPUTE_TYPE})...")
+
+try:
+    model = WhisperModel(
+        MODEL_SIZE,
+        device="cpu",
+        compute_type=COMPUTE_TYPE,
+        cpu_threads=CPU_THREADS
+    )
+    logger.info("Model loaded successfully and ready for use.")
+except Exception as e:
+    logger.warning(f"Failed to load with compute_type={COMPUTE_TYPE} ({e}). Retrying with float32 fallback...")
+    model = WhisperModel(
+        MODEL_SIZE,
+        device="cpu",
+        compute_type="float32",
+        cpu_threads=CPU_THREADS
+    )
+    logger.info("Model loaded successfully via float32 fallback.")
 
 #region @app.get("/health")
 @app.get("/health")
