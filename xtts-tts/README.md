@@ -58,3 +58,13 @@ curl -X POST "http://localhost:8020/api/tts" \
   --output "speech.wav"
 
 ```
+
+```
+pl
+├── generuj_ja_xtts.bat
+├── input.txt
+├── sample.wav
+├── speech.wav
+└── trash
+    └── test.wav
+```

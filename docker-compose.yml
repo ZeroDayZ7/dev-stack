@@ -48,16 +48,16 @@ services:
     ports:
       - "${WHISPER_PORT:-8001}:8000"
     environment:
-      - OMP_NUM_THREADS=${OMP_NUM_THREADS:-2}
-      - CTRANS_NUM_THREADS=${CTRANS_NUM_THREADS:-2}
+      - OMP_NUM_THREADS=${OMP_NUM_THREADS:-4}
+      - CTRANS_NUM_THREADS=${CTRANS_NUM_THREADS:-4}
     volumes:
       - whisper_models:/root/.cache/huggingface
-    depends_on:
-      - ollama
     deploy:
       resources:
         limits:
-          memory: ${WHISPER_MEMORY_LIMIT:-1G}
+          memory: ${WHISPER_MEMORY_LIMIT:-6G}
+        reservations:
+          memory: 2G
   # endregion
 
   # region Coqui XTTS v2 (CLI Worker)
