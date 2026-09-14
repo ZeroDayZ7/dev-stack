@@ -9,7 +9,7 @@
     "**/LICENSE": true,
     "**/.gitattributes": true,
     // "**/.gitignore": true,
-    "**/Dockerfile": true,
+    // "**/Dockerfile": true,
     "**/.github": true
   },
 

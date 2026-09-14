@@ -38,20 +38,27 @@ services:
           memory: ${PIPER_MEMORY_LIMIT:-512M}
   # endregion
 
-  # region Whisper STT
+# region Whisper STT
   ai-whisper-stt:
-    <<: *common-settings
     build:
       context: ./whisper
       dockerfile: Dockerfile
     container_name: ai-whisper-stt
     ports:
       - "${WHISPER_PORT:-8001}:8000"
+    restart: "no"
     environment:
+      - ENV=${ENV:-development}
       - OMP_NUM_THREADS=${OMP_NUM_THREADS:-4}
       - CTRANS_NUM_THREADS=${CTRANS_NUM_THREADS:-4}
+      - HF_HOME=/root/.cache/huggingface
+      # - HF_HUB_OFFLINE=1
+      - WHISPER_MODEL=${WHISPER_MODEL:-small}
+      - WHISPER_COMPUTE_TYPE=${WHISPER_COMPUTE_TYPE:-float32}
     volumes:
       - whisper_models:/root/.cache/huggingface
+    networks:
+    - dev-stack-network
     deploy:
       resources:
         limits:
