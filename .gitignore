@@ -13,11 +13,12 @@ bin/*
 **/logs/
 **/combined.txt
 # **/temp.md
-# **/speech.wav
+**/speech.wav
 **/sample.wav
 **/speech.wav
 **/trash
 **/input.txt
+**/sample.7z
 **/pgadmin_data/
 
 
